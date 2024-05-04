@@ -1,4 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="Util.CSRFTokenUtil" %>
+<%
+  HttpSession sessionObj = request.getSession();
+  CSRFTokenUtil.saveCSRFTokenToSession(sessionObj);
+  String csrfToken = CSRFTokenUtil.getCSRFTokenFromSession(sessionObj);
+%>
 <html>
 <head>
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">

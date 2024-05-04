@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import Util.CSRFTokenUtil;
 import Util.EmailUtility;
 
 import javax.servlet.RequestDispatcher;
@@ -26,6 +28,9 @@ import Admin_Model.AD_Admin;
 import Admin_Dao.AD_AccountDao;
 import Admin_Dao.AD_AdminDao;
 import Admin_Model.AD_Account;
+
+
+
 
 @MultipartConfig
 @WebServlet("/AD/*")
@@ -58,6 +63,10 @@ public class Controller_Admin extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String csrfTokenFromSession = CSRFTokenUtil.getCSRFTokenFromSession(session);
+		String csrfTokenFromRequest = request.getParameter("csrf_token");
+
 		String action = request.getPathInfo();
 
 		try {
