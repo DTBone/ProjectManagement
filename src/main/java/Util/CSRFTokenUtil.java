@@ -28,7 +28,7 @@ public class CSRFTokenUtil implements Filter{
         byte[] tokenBytes=new byte[32];
         new SecureRandom().nextBytes(tokenBytes);
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
-        session.setAttribute("csrf_token", token);
+        session.setAttribute("csrf_token", token); // gán token vừa tạo vào trong session
         return token;
     }
 
