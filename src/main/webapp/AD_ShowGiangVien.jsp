@@ -75,6 +75,11 @@ margin-top:30px;
 								<div class="card-body">
 									<form action="<%=request.getContextPath()%>/AD/updategv" method="post">
 										<!-- Assuming "updategv" is the correct action -->
+										<input type="hidden" name="csrf_token"
+										<c:if test="${csrf_token !=null }">
+											   value="${csrf_token}"
+										</c:if>
+										>
 										<caption>
 											<h2>Thông Tin Giảng Viên</h2>
 										</caption>

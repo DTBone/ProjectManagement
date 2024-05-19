@@ -112,16 +112,21 @@
 								<label for="exampleSelect1">Chọn Nhóm</label>
 								<form id="myForm" action="<%=request.getContextPath()%>/GV/qlsv"
 									method="post">
+									<input type="hidden" name="csrf_token"
+									<c:if test="${csrf_token !=null }">
+										   value="${csrf_token}"
+									</c:if>
+									>
 									<select class="form-control groups d-inline-block" id="nhom"
 										name="nhom">
 										<option value="" selected>---Chọn---Nhom</option>
 										<c:forEach var="nhom" items="${nhoms}">
 											<c:choose>
 												<c:when test="${nhom.getMaNhom() eq seleNhom}">
-													<option value="${nhom.getMaNhom()}" selected>${nhom.getTenNhom()}</option>
+													<option value="${nhom.getMaNhom()}" selected>${fn:escapeXml(nhom.getTenNhom())}</option>
 												</c:when>
 												<c:otherwise>
-													<option value="${nhom.getMaNhom()}">${nhom.getTenNhom()}--(${nhom.getMaNhom()})</option>
+													<option value="${nhom.getMaNhom()}">${fn:escapeXml(nhom.getTenNhom())}--(${fn:escapeXml(nhom.getMaNhom())})</option>
 												</c:otherwise>
 											</c:choose>
 
@@ -129,7 +134,7 @@
 										</c:forEach>
 									</select> <a href="ANhom"
 										class="nav-link mt-5 d-inline-block btn-primary rounded border border-success ml-5"
-										id="button">Thêm nhóm</a>
+										id="button1">Thêm nhóm</a>
 								</form>
 							</div>
 						</fieldset>

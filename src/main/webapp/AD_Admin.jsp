@@ -7,11 +7,7 @@
 
 <%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="Util.CSRFTokenUtil" %>
-<%
-	HttpSession sessionObj = request.getSession();
-	CSRFTokenUtil.saveCSRFTokenToSession(sessionObj);
-	String csrfToken = CSRFTokenUtil.getCSRFTokenFromSession(sessionObj);
-%>
+
 
 <!DOCTYPE html>
 <html>
@@ -96,7 +92,11 @@ margin-top:30px;
 							<div class="card">
 								<div class="card-body">
 									<form action="<%=request.getContextPath()%>/AD/show_updateadmintaikhoan" method="post">
-										<input type="hidden" name="csrf_token" value="<%= csrfToken %>">
+										<input type="hidden" name="csrf_token"
+										<c:if test="${csrf_token !=null }">
+											   value="${csrf_token}"
+										</c:if>
+										>
 										<!-- Assuming "updategv" is the correct action -->
 										<caption>
 											<h2>Thông Tin Tài Khoản</h2>

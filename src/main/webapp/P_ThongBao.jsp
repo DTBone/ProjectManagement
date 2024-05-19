@@ -136,7 +136,11 @@
 											<!-- Form gửi thông báo có thể thêm ở đây -->
 											<form id="notificationFormtb">
 												<!-- Các trường thông báo -->
-
+												<input type="hidden" name="csrf_token"
+												<c:if test="${csrf_token !=null }">
+													   value="${csrf_token}"
+												</c:if>
+												>
 												<div class="mb-3">
 													<label for="title" class="form-label">Tiêu đề:</label> <input
 														type="text" class="form-control" id="tbTieuDe"
@@ -184,6 +188,11 @@
 											<!-- Form gửi thông báo có thể thêm ở đây -->
 											<form id="notificationForm" action="EmailControllers"
 												method="POST">
+												<input type="hidden" name="csrf_token"
+												<c:if test="${csrf_token !=null }">
+													   value="${csrf_token}"
+												</c:if>
+												>
 												<!-- Các trường thông báo -->
 
 												<input type="hidden" name="action" value="GuiThongBaoGet">

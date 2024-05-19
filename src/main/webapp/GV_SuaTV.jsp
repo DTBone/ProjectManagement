@@ -153,6 +153,11 @@ h3 {
 					</form> --%>
 					<form class="form" data-form="form-1" method="post"
 						action="<%=request.getContextPath()%>/GV/EditTV">
+						<input type="hidden" name="csrf_token"
+						<c:if test="${csrf_token !=null }">
+							   value="${csrf_token}"
+						</c:if>
+						>
 						<h3>Chỉnh sửa thông tin</h3>
 						<table>
 							<tr>
@@ -178,31 +183,31 @@ h3 {
 								<td>MSSV:</td>
 								<td><input type="text" class="input" id="mssv" name="mssv"
 									value="${suasv.getMSSV()}" required autocomplete="off"
-									pattern="\d*" readonly title="Chỉ được nhập số nguyên"></td>
+									pattern="\d*" readonly title="Chỉ được nhập số nguyên" maxlength="255"></td>
 							</tr>
 							<tr>
 								<td>Họ và Tên:</td>
 								<td><input type="text" class="input" id="name" name="name"
-									value="${suasv.getHoTen()}" required autocomplete="off"></td>
+									value="${suasv.getHoTen()}" required autocomplete="off" maxlength="255"></td>
 							</tr>
 							<tr>
 								<td>Ngày sinh:</td>
 								<td><input type="date" class="input" id="bd" name="bd"
-									value="${suasv.getNgaySinh()}" required autocomplete="off"></td>
+									value="${suasv.getNgaySinh()}" required autocomplete="off" maxlength="255"></td>
 
 							</tr>
 							<tr>
 								<td>Email:</td>
 								<td><input type="email" class="input" id="email"
 									value="${suasv.getEmail()}" name="email" required
-									autocomplete="off"></td>
+									autocomplete="off" maxlength="255"></td>
 
 							</tr>
 							<tr>
 								<td>CCCD:</td>
 								<td><input type="text" class="input" id="cccd" name="cccd"
 									value="${suasv.getCCCD()}" required autocomplete="off"
-									minlength="12" pattern="\d*" title="Chỉ được nhập số nguyên"></td>
+									minlength="12" pattern="\d*" title="Chỉ được nhập số nguyên" maxlength="255"></td>
 
 							</tr>
 							<tr>
@@ -233,7 +238,7 @@ h3 {
 								<td>Địa chỉ:</td>
 								<td><input type="text" class="input" id="diachi"
 									value="${suasv.getDiaChi()}" name="diachi" required
-									autocomplete="off"></td>
+									autocomplete="off" maxlength="255"></td>
 
 							</tr>
 							<tr>

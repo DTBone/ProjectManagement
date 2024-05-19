@@ -1,6 +1,7 @@
 package Admin_Controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Properties;
 import java.util.Random;
 
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import static Util.CSRFTokenUtil.validateCSRFToken;
+
 /**
  * Servlet implementation class ForgotPassword
  */
@@ -26,55 +29,62 @@ import javax.servlet.http.HttpSession;
 public class ForgotPassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String email = request.getParameter("email");
-        RequestDispatcher dispatcher = null;
-        int otpvalue = 0;
-        HttpSession mySession = request.getSession();
-
-        if (email != null && !email.equals("")) {
-            // Generate and send OTP
-            Random rand = new Random();
-            otpvalue = rand.nextInt(999999);
-
-            String to = email; // change accordingly
-            // Get the session object
-            Properties props = new Properties();
-            props.put("mail.smtp.host", "smtp.gmail.com");
-            props.put("mail.smtp.port", "456");
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.starttls.enable", "true");
-
-            Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("nhanjp29kt12345@gmail.com", "gitxqhbbzqxabmxb");
-                }
-            });
-
-            // Compose message
-            try {
-                MimeMessage message = new MimeMessage(session);
-                message.setFrom(new InternetAddress("nhanjp29kt12345@gmail.com")); // change accordingly
-                message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-                message.setSubject("Password Reset OTP");
-                message.setText("Your OTP is: " + otpvalue);
-                // Send message
-                Transport.send(message);
-                System.out.println("Message sent successfully");
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            }
-
-            dispatcher = request.getRequestDispatcher("AD_EnterOtp.jsp");
-            request.setAttribute("message", "OTP is sent to your email id");
-            mySession.setAttribute("otp", otpvalue);
-            mySession.setAttribute("email", email);
-            dispatcher.forward(request, response);
+        if (!validateCSRFToken(request)) {
+            System.out.println("Invalid CSRF token");
+            request.getRequestDispatcher("error.jsp").forward(request, response);
         } else {
-            // Handle the case where email is null or empty
-            dispatcher = request.getRequestDispatcher("ErrorPage.jsp");
-            request.setAttribute("errorMessage", "Email cannot be null or empty");
-            dispatcher.forward(request, response);
+            String email = request.getParameter("email");
+            RequestDispatcher dispatcher = null;
+            int otpvalue = 0;
+            HttpSession mySession = request.getSession();
+
+            if (email != null && !email.equals("")) {
+                // Generate and send OTP
+                Random rand = new Random();
+                otpvalue = rand.nextInt(999999);
+
+                String to = email; // change accordingly
+                // Get the session object
+                Properties props = new Properties();
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.port", "456");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.starttls.enable", "true");
+
+                Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication("nhanjp29kt12345@gmail.com", "gitxqhbbzqxabmxb");
+                    }
+                });
+
+                // Compose message
+                try {
+                    MimeMessage message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress("nhanjp29kt12345@gmail.com")); // change accordingly
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+                    message.setSubject("Password Reset OTP");
+                    message.setText("Your OTP is: " + otpvalue);
+                    // Send message
+                    Transport.send(message);
+                    System.out.println("Message sent successfully");
+                } catch (MessagingException e) {
+                    request.getRequestDispatcher("error.jsp").forward(request, response);
+                    return;
+                }
+
+                dispatcher = request.getRequestDispatcher("AD_EnterOtp.jsp");
+                request.setAttribute("message", "OTP is sent to your email id");
+                mySession.setAttribute("otp", otpvalue);
+                mySession.setAttribute("email", email);
+                dispatcher.forward(request, response);
+            } else {
+                // Handle the case where email is null or empty
+                dispatcher = request.getRequestDispatcher("ErrorPage.jsp");
+                request.setAttribute("errorMessage", "Email cannot be null or empty");
+                dispatcher.forward(request, response);
+            }
         }
+
+
     }
 }

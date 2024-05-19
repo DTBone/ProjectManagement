@@ -1,5 +1,7 @@
 package Admin_Controller;
 
+import Util.CSRFTokenUtil;
+
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -27,8 +29,10 @@ public class LogoutController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
+		session.removeAttribute("csrf_token");
 		session.invalidate();
-		
+		session = request.getSession(true);
+		CSRFTokenUtil.generateCSRFToken(request);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
 		dispatcher.forward(request, response);
 	}

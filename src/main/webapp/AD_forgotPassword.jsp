@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+  String csrfToken = (String) session.getAttribute("csrf_token");
+%>
 <!doctype html>
 <html>
 <head>
@@ -73,6 +76,8 @@
         </div>
         
         <form class="card mt-4" action="<%=request.getContextPath()%>/forgotPassword" method="POST">
+          <input type="hidden" name="csrf_token" value="<%= csrfToken %>">
+
           <div class="card-body">
             <div class="form-group">
               <label for="email-for-pass">Nhập địa chỉ email của bạn</label>

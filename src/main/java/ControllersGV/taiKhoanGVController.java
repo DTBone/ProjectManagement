@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.Servlet;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -34,6 +35,7 @@ import ModelGV.SinhVien;
 import ModelGV.ThongBao;
 import ModelGV.Time;
 import ModelGV.taikhoangv;
+import Util.InputValidator;
 
 /**
  * Servlet implementation class taiKhoanGV
@@ -85,12 +87,18 @@ public class taiKhoanGVController extends HttpServlet {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
-		 AD_Account account = (AD_Account) session.getAttribute("user_login");
-		  if (account == null) {
-		   request.getRequestDispatcher("/Login.jsp").forward(request, response);
-		  }
+//		 AD_Account account = (AD_Account) session.getAttribute("user_login");
+//		  if (account == null) {
+//		   request.getRequestDispatcher("/Login.jsp").forward(request, response);
+//		  }
+//
+//		String id = request.getParameter("id");
+//		if(!InputValidator.isValid(id) || id.length() > 255)
+//		{
+//			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Parameter is null.");
+//		}
 		String action = request.getPathInfo();
-		System.out.println(action + "aaa");
+
 		try {
 			switch (action) {
 			case "/info":
@@ -188,6 +196,11 @@ public class taiKhoanGVController extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		doGet(request, response);
+//		String id = request.getParameter("id");
+//		if(!InputValidator.isValid(id))
+//		{
+//			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Parameter is null.");
+//		}
 	}
 
 	private void infoGV(HttpServletRequest request, HttpServletResponse response)
@@ -196,7 +209,14 @@ public class taiKhoanGVController extends HttpServlet {
 		try {
 			HttpSession session = request.getSession();
 			AD_Account acc = (AD_Account) session.getAttribute("user_login");
-			gv = tkgv.ShowTTTaiKhoan(acc.getUsername());
+			if(acc == null)
+			{
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account is null.");
+			}
+			else {
+				gv = tkgv.ShowTTTaiKhoan(acc.getUsername());
+			}
+
 
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -286,16 +306,34 @@ public class taiKhoanGVController extends HttpServlet {
 		HttpSession session = request.getSession();
 		AD_Account acc = (AD_Account) session.getAttribute("user_login");
 		nhs = qlsv.ShowTTNhom(acc.getUsername());
-		request.setAttribute("nhoms", nhs);
-
 		List<SinhVien> svs = new ArrayList<>();
-		svs = qlsv.ShowTTSV(request.getParameter("nhom"));
-		request.setAttribute("sinhvienkiet", svs);
+		String nhom  = request.getParameter("nhom");
+		if(InputValidator.isValid(nhom))
+		{
+			svs = qlsv.ShowTTSV(nhom);
+			if(acc == null || nhs == null || svs == null )
+			{
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account is null.");
+			}
+			else{
+				request.setAttribute("nhoms", nhs);
 
-		String nhom = request.getParameter("nhom");
-		session.setAttribute("seleNhom", nhom);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_QuanLySV.jsp");
-		dispatcher.forward(request, response);
+
+				request.setAttribute("sinhvienkiet", svs);
+
+
+				session.setAttribute("seleNhom", nhom);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_QuanLySV.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
+		else {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account is null.");
+		}
+
+
+
+
 	}
 
 	/*
@@ -314,29 +352,37 @@ public class taiKhoanGVController extends HttpServlet {
 		HttpSession session = request.getSession();
 		taikhoangv gv = null;
 		AD_Account acc = (AD_Account) session.getAttribute("user_login");
-		boolean isDK = false;
-		boolean isNop = false;
-		try {
-			List<Nhom> nhs = new ArrayList<>();
-			nhs = qlsv.ShowTTNhom(acc.getUsername());
-			session.setAttribute("nhomOfGV", nhs);
-			gv = tkgv.ShowTTTaiKhoan(acc.getUsername());
-			session.setAttribute("ctttgv", gv);
-			isDK = dt.KiemTraTgDK();
-			isNop = dt.KiemTraTgNop();
-			Time time = dt.ShowTG();
-			request.setAttribute("time", time);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(acc == null)
+		{
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Account is null.");
+		}
+		else
+		{
+			boolean isDK = false;
+			boolean isNop = false;
+			try {
+				List<Nhom> nhs = new ArrayList<>();
+				nhs = qlsv.ShowTTNhom(acc.getUsername());
+				session.setAttribute("nhomOfGV", nhs);
+				gv = tkgv.ShowTTTaiKhoan(acc.getUsername());
+				session.setAttribute("ctttgv", gv);
+				isDK = dt.KiemTraTgDK();
+				isNop = dt.KiemTraTgNop();
+				Time time = dt.ShowTG();
+				request.setAttribute("time", time);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			request.setAttribute("tkGv", gv);
+			session.setAttribute("ttgv", acc);
+			session.setAttribute("dk", isDK);
+			session.setAttribute("nop", isNop);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_TrangChu.jsp");
+			dispatcher.forward(request, response);
 		}
 
-		request.setAttribute("tkGv", gv);
-		session.setAttribute("ttgv", acc);
-		session.setAttribute("dk", isDK);
-		session.setAttribute("nop", isNop);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_TrangChu.jsp");
-		dispatcher.forward(request, response);
 	}
 
 	private void AddNhom(HttpServletRequest request, HttpServletResponse response)
@@ -416,11 +462,19 @@ public class taiKhoanGVController extends HttpServlet {
 			throws SQLException, IOException, ServletException {
 		List<DeTai> dtai = new ArrayList<>();
 		dtai = dt.ShowTTDeTai();
-		request.setAttribute("dtai", dtai);
-		HttpSession session = request.getSession();
-		session.setAttribute("detais", dtai);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_DKDT.jsp");
-		dispatcher.forward(request, response);
+		if(dtai == null)
+		{
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "List is null.");
+		}
+		else
+		{
+			request.setAttribute("dtai", dtai);
+			HttpSession session = request.getSession();
+			session.setAttribute("detais", dtai);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_DKDT.jsp");
+			dispatcher.forward(request, response);
+		}
+
 	}
 
 	private void DKDT(HttpServletRequest request, HttpServletResponse response)
@@ -475,10 +529,17 @@ public class taiKhoanGVController extends HttpServlet {
 		taikhoangv MaGV = (taikhoangv) session.getAttribute("ctttgv");
 
 		dtai = qldt.ShowDeTaiofGV(MaGV.getMaGV());
+		if(dtai == null)
+		{
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "List is null.");
+		}
+		else {
 
-		request.setAttribute("dtaiofgv", dtai);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_DeTai.jsp");
-		dispatcher.forward(request, response);
+
+			request.setAttribute("dtaiofgv", dtai);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_DeTai.jsp");
+			dispatcher.forward(request, response);
+		}
 	}
 
 	private void ShowFormThemTV(HttpServletRequest request, HttpServletResponse response)
@@ -556,12 +617,16 @@ public class taiKhoanGVController extends HttpServlet {
 		session.setAttribute("nhomss", nhs);
 		request.setAttribute("nganhs", ngs);
 		String MSSV = request.getParameter("id");
-		SinhVien sv = qlsv.ShowTTTVFrom(MSSV);
+		if(InputValidator.isValid(MSSV))
+		{
+			SinhVien sv = qlsv.ShowTTTVFrom(MSSV);
 
-		request.setAttribute("suasv", sv);
+			request.setAttribute("suasv", sv);
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_SuaTV.jsp");
-		dispatcher.forward(request, response);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_SuaTV.jsp");
+			dispatcher.forward(request, response);
+		}
+
 	}
 
 	private void EditTV(HttpServletRequest request, HttpServletResponse response)
@@ -586,14 +651,21 @@ public class taiKhoanGVController extends HttpServlet {
 	}
 	private void ShowGiaHan(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
-		
+
 		String MaDeTai = request.getParameter("id");
-		DeTai dt = qldt.TTDeTaiFrom(MaDeTai);
+		if(true)
+		{
+			DeTai dt = qldt.TTDeTaiFrom(MaDeTai);
 
-		request.setAttribute("ttdt", dt);
+			request.setAttribute("ttdt", dt);
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_GiaHan.jsp");
-		dispatcher.forward(request, response);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/GV_GiaHan.jsp");
+			dispatcher.forward(request, response);
+		}
+		else {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "parameter is incorrect.");
+		}
+
 	}
 	private void GiaHan(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
@@ -619,7 +691,13 @@ public class taiKhoanGVController extends HttpServlet {
 		taikhoangv MaGV = (taikhoangv) session.getAttribute("ctttgv");
 		List<ThongBao> tb = new ArrayList<>();
 		try {
-			tb = thongbao.XemTB(MaGV.getMaGV());
+			if(tb != null)
+			{
+				tb = thongbao.XemTB(MaGV.getMaGV());
+			}else {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "List is null.");
+			}
+
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

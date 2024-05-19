@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ page import="Admin_Model.AD_Account" %>
@@ -47,6 +48,11 @@
 </style>
 
 <header>
+    <input type="hidden" name="csrf_token"
+    <c:if test="${csrf_token !=null }">
+           value="${csrf_token}"
+    </c:if>
+    >
     <div class="logo">
         <img
         <%--			src="https://drive.google.com/uc?export=view&id=1cmLLXbEQ9ea_-BBgrIDBgfDNvkzan7Sh"--%>
@@ -68,6 +74,7 @@
         <button class="logout-btn">
             <a href="<%=request.getContextPath()%>/LogoutController"
                class="nav-link">Đăng Xuất</a>
+
         </button>
         <%
         } else {

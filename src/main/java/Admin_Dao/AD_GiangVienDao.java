@@ -42,6 +42,9 @@ public class AD_GiangVienDao {
     			 String gioiTinh = rs.getString("GioiTinh");
     			 String image=rs.getString("Image");
     			 listGV.add(new AD_GiangVien(maGV, hoTen, email, trinhDo,maKhoa,maTK,gioiTinh,image));    		}
+            if (listGV.isEmpty()) {
+                return null;
+            }
     	}
     	catch(SQLException e) 
     	 {

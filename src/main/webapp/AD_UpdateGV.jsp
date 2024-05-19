@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<%
+	String csrfToken = (String) session.getAttribute("csrf_token");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,8 +74,9 @@ body {
 						<div class="container col-md-7">
 							<div class="card">
 								<div class="card-body">
-									<form action="<%=request.getContextPath()%>/AD/update_giangvien" method="post"
+									<form action="<%=request.getContextPath()%>/AD/update_giangvien" method="POST"
 										enctype="multipart/form-data">
+										<input type="hidden" name="csrf_token" value="<%= csrfToken %>">
 										<caption>
 											<h2>Chỉnh Sửa Thông Tin Giảng Viên</h2>
 										</caption>
@@ -82,44 +85,38 @@ body {
 											<label>Mã Giảng Viên</label> <input type="text"
 												value="<c:out value='${forgvupdate.maGV}' />"
 												class="form-control" name="MaGV" readonly
-												required="required">
+												required="required" maxlength="255">
 										</fieldset>
 
 										<fieldset class="form-group">
 											<label>Họ Tên</label> <input type="text"
 												value="<c:out value='${forgvupdate.hoTen}' />"
-												class="form-control" name="HoTen">
+												class="form-control" name="HoTen" maxlength="255">
 										</fieldset>
 
 										<fieldset class="form-group">
 											<label>Email</label> <input type="text"
 												value="<c:out value='${forgvupdate.email}' />"
-												class="form-control" name="Email">
+												class="form-control" name="Email" maxlength="255">
 										</fieldset>
 
 										<fieldset class="form-group">
 											<label>Trình Độ</label> <input type="text"
 												value="<c:out value='${forgvupdate.trinhDo}' />"
-												class="form-control" name="TrinhDo">
+												class="form-control" name="TrinhDo" maxlength="255">
 										</fieldset>
 
 										<fieldset class="form-group">
 											<label>Mã Khoa</label> <input type="text"
 												value="<c:out value='${forgvupdate.maKhoa}' />"
-												class="form-control" name="MaKhoa">
+												class="form-control" name="MaKhoa" maxlength="255">
 										</fieldset>
 
 										<fieldset class="form-group">
 											<label>Mã Tài Khoản</label> <input type="text"
 												value="<c:out value='${forgvupdate.maTK}' />"
-												class="form-control" name="MaTK" readonly>
+												class="form-control" name="MaTK" readonly maxlength="255">
 										</fieldset>
-
-										<%--     <fieldset class="form-group">
-                        <label>Giới Tính</label>
-                        <input type="text" value="<c:out value='${forgvupdate.gioiTinh}' />" class="form-control" name="GioiTinh">
-                    </fieldset> --%>
-
 										<div class="form-group">
 											<label>Giới Tính</label> <select name="GioiTinh"
 												class="form-select" aria-label="Default select example">
@@ -150,11 +147,12 @@ body {
 								</div>
 							</div>
 						</div>
+					</div>
 				</main>
 			</div>
 		</div>
 	</div>
-	</div>
+
 
 
 

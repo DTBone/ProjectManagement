@@ -140,6 +140,11 @@ a#button {
 					</c:if>
 					<form id="form" class="form" data-form="form-1" method="post"
 						action="<%=request.getContextPath()%>/GV/dxdt">
+						<input type="hidden" name="csrf_token"
+						<c:if test="${csrf_token !=null }">
+							   value="${csrf_token}"
+						</c:if>
+						>
 						<h3>Đề Xuất Đề Tài</h3>
 						<table>
 							<tr>

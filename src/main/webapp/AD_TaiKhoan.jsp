@@ -124,6 +124,11 @@
 							<div class="modal-content">
 								<form action="<%=request.getContextPath()%>/AD/new_account"
 									method="post">
+									<input type="hidden" name="csrf_token"
+									<c:if test="${csrf_token !=null }">
+										   value="${csrf_token}"
+									</c:if>
+									>
 									<div class="modal-header">
 										<h4 class="modal-title">Thêm Tài Khoản Mới</h4>
 										<button type="button" class="close" data-dismiss="modal"
@@ -132,15 +137,15 @@
 									<div class="modal-body">
 										<div class="form-group">
 												<label>Mã Tài Khoản</label> <input name="MaTK" type="text"
-													class="form-control" required>
+													class="form-control" required maxlength="255">
 											</div>
 										<div class="form-group">
 											<label>Tên Đăng Nhập</label> <input name="username" type="text"
-												class="form-control" required>
+												class="form-control" required maxlength="255">
 										</div>
 										<div class="form-group">
 											<label>Password</label> <input name="password" type="text"
-												class="form-control" required>
+												class="form-control" required maxlength="255">
 										</div>
 										<div class="form-group">
 											<label>Vai Trò</label> <select name="role" class="form-select"

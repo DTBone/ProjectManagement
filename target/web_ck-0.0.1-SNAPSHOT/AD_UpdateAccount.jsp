@@ -45,6 +45,11 @@
 							<div class="card">
 								<div class="card-body">
 									<form action="<%=request.getContextPath()%>/AD/update_taikhoan" method="post">
+										<input type="hidden" name="csrf_token"
+										<c:if test="${csrf_token !=null }">
+											   value="${csrf_token}"
+										</c:if>
+										>
 										<caption>
 											<h2>Chỉnh Sửa Thông Tin Giảng Viên</h2>
 										</caption>
@@ -53,19 +58,19 @@
 											<label>Mã Tài Khoản</label> <input type="text"
 												value="<c:out value='${edittaikhoan.maTK}' />"
 												class="form-control" name="MaTK" readonly
-												required="required">
+												required="required" maxlength="255">
 										</fieldset>
 
 										<fieldset class="form-group">
 											<label>Tên Đăng Nhập</label> <input type="text"
 												value="<c:out value='${edittaikhoan.username}' />"
-												class="form-control" name="username">
+												class="form-control" name="username" maxlength="255">
 										</fieldset>
 
 										<fieldset class="form-group">
 											<label>Mật Khẩu</label> <input type="text"
 												value="<c:out value='${edittaikhoan.password}' />"
-												class="form-control" name="password">
+												class="form-control" name="password" maxlength="255">
 										</fieldset>
 
 										<%-- <fieldset class="form-group">

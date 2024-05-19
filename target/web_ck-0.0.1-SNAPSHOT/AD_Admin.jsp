@@ -4,6 +4,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ page import="Admin_Model.AD_GiangVien"%>
+
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="Util.CSRFTokenUtil" %>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,6 +92,11 @@ margin-top:30px;
 							<div class="card">
 								<div class="card-body">
 									<form action="<%=request.getContextPath()%>/AD/show_updateadmintaikhoan" method="post">
+										<input type="hidden" name="csrf_token"
+										<c:if test="${csrf_token !=null }">
+											   value="${csrf_token}"
+										</c:if>
+										>
 										<!-- Assuming "updategv" is the correct action -->
 										<caption>
 											<h2>Thông Tin Tài Khoản</h2>
@@ -148,6 +158,7 @@ margin-top:30px;
 								</div>
 							</div>
 						</div>
+					</div>
 				</main>
 			</div>
 		</div>

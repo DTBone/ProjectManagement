@@ -2,6 +2,10 @@
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<%
+    String csrfToken = (String) session.getAttribute("csrf_token");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -137,6 +141,7 @@
                                         <!-- Form gửi thông báo có thể thêm ở đây -->
                                         <form id="notificationFormtb">
                                             <!-- Các trường thông báo -->
+                                            <input type="hidden" name="csrf_token" value="<%= csrfToken %>">
 
                                             <div class="mb-3">
                                                 <%--@declare id="title"--%><label for="title" class="form-label">Tiêu
@@ -190,6 +195,7 @@
                                         <!-- Form gửi thông báo có thể thêm ở đây -->
                                         <form id="notificationForm" action="EmailControllers"
                                               method="POST">
+                                            <input type="hidden" name="csrf_token" value="<%= csrfToken %>">
                                             <!-- Các trường thông báo -->
 
                                             <input type="hidden" name="action" value="GuiThongBaoGet">
@@ -205,12 +211,12 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="title" class="form-label">Tiêu đề:</label> <input
-                                                    type="text" class="form-control" id="TieuDe" name="TieuDe">
+                                                    type="text" class="form-control" id="TieuDe" name="TieuDe" maxlength="255">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="message" class="form-label">Nội dung:</label>
                                                 <textarea class="form-control" id="NoiDung" name="NoiDung"
-                                                          rows="4"></textarea>
+                                                          rows="4" maxlength="500"></textarea>
                                             </div>
 
                                             <div class="modal-footer">

@@ -133,40 +133,45 @@ h3 {
 					
 					<form class="form" data-form="form-1" method="post"
 						action="<%=request.getContextPath()%>/GV/GiaHan">
+						<input type="hidden" name="csrf_token"
+						<c:if test="${csrf_token !=null }">
+							   value="${csrf_token}"
+						</c:if>
+						>
 						<h3>Gia Hạn Đề Tài</h3>
 						<table>
 							<tr>
 								<td>Tên Đề Tài:</td>
 								<td>
 								<input type="text" class="input" id="name" name="name"
-									value="${ttdt.getTenDeTai()}" required readonly autocomplete="off"></td>
+									value="${ttdt.getTenDeTai()}" required readonly autocomplete="off" maxlength="255"></td>
 							</tr>
 							<tr>
 								<td>Mã Đề Tài:</td>
 								<td><input type="text" class="input" id="madt" name="madt"
-									value="${ttdt.getMaDT()}" required readonly autocomplete="off"></td>
+									value="${ttdt.getMaDT()}" required readonly autocomplete="off" maxlength="255"></td>
 							</tr>
 							<tr>
 								<td>Ngày Kết Thúc (cũ):</td>
 								<td><input type="date" class="input" id="ngayketthuc" name="ngayketthuc"
-									value="${ttdt.getNgayKetThuc()}" required readonly autocomplete="off"></td>
+									value="${ttdt.getNgayKetThuc()}" required readonly autocomplete="off" maxlength="255"></td>
 							</tr>
 							<tr>
 								<td>Ngày gia hạn (Sẽ thành ngày kết thúc mới):</td>
 								<td><input type="date" class="input" id="ngaygiahan" name="ngaygiahan"
-									 required autocomplete="off" onchange="kiemTraNgay()"></td>
+									 required autocomplete="off" onchange="kiemTraNgay()" maxlength="255"></td>
 
 							</tr>
 							<tr>
 								<td>Link Đơn Xin Gia Hạn:</td>
 								<td><input type="text" class="input" id="linkdonxin" name="linkdonxin"
-									 required autocomplete="off"></td>	
+									 required autocomplete="off" maxlength="255"></td>
 
 							</tr>
 							<tr>
 								<td>Lý Do:</td>
 								<td><textarea class="input" id="lydo" name="lydo"
-									 required autocomplete="off"></textarea></td>
+									 required autocomplete="off" maxlength="255"></textarea></td>
 
 							</tr>
 							
